@@ -1,10 +1,9 @@
-function varargout = asfx_cond(pasf, fasf)
+function varargout = ASFX_cond(fasf)
 % ASFX_cond Create conditions file from ASF log file.
-%   ASFX_COND(pasf, fasf)
+%   ASFX_COND(fasf)
 %
 % Optional input arguments:
-%   pasf - ASFX log path name 
-%   fasf - ASFX log file name 
+%   fasf - ASFX log file full name 
 %
 % Optional output arguments:
 %   names     - cell array of conditions names
@@ -15,34 +14,34 @@ function varargout = asfx_cond(pasf, fasf)
 %                                correcting conditions onsets
 % _________________________________________________________________________
 
-% Last modified 11-11-2010 Mateus Joffily
+% Last modified 11-01-2011 Mateus Joffily
 
 if nargin == 0
     % Select ASFX *.mat data file
     [fasf, pasf] = uigetfile('*.mat', 'Select ASFX output file');
+    fasf = fullfile(pasf, fasf);
 end
 
 % Load experiment information
-load(fullfile(pasf, fasf), 'ExpInfo');
+load(fasf, 'ExpInfo');
 
-% Define conditions' name
+% Conditions' name
 names = {'fix' 'NN' 'PS' 'PI' 'US' 'UI' 'Ple' 'Unp' 'Sen' 'Int'};
 
-% Initiliaze onsets and durations
+% Related stimuli in ASF definition file
+stimID = {'XX01_fix', 'NN_', 'PS_', 'PI_', 'US_', 'UI_', ...
+    'ASF_piacere', 'ASF_dispiacere', 'ASF_vigilanza', ...
+    'ASF_pensiero'};
+
+pages     = cell(size(stimID));
+for i = 1:length(pages)
+    pages{i}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, ...
+                                                         stimID{i}))==0);
+end
+
+% Initiliaze onsets, durations and parametric modulation
 onsets    = cell(size(names));
 durations = cell(size(names));
-
-% Define pages associated to each condition
-pages{1}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'XX01_fix'))==0);
-pages{2}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'NN_'))==0);
-pages{3}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'PS_'))==0);
-pages{4}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'PI_'))==0);
-pages{5}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'US_'))==0);
-pages{6}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'UI_'))==0);
-pages{7}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'ASF_piacere'))==0);
-pages{8}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'ASF_dispiacere'))==0);
-pages{9}  = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'ASF_vigilanza'))==0);
-pages{10} = find(cellfun(@isempty,strfind(ExpInfo.stimNames, 'ASF_pensiero'))==0);
 
 % Initialize parametric modulation for verbal-report scales
 pmod = struct('names', {}, 'param', {}, 'poly', {});
@@ -102,18 +101,22 @@ end
 
 % Useful to syncronize with BrainProducts
 numberOfIgnoredDummyScans = ExpInfo.Cfg.synchToScanner;
+expDurationInSecs = ExpInfo.TrialInfo(end).tStart + ...
+                    ExpInfo.TrialInfo(end).timing(1);
 
-% Save conditions .mat file
-[pcond fcond] = fileparts(fullfile(pasf, fasf));
-save(fullfile(pcond, [fcond '_cond_asf.mat']), ...
-    'names', 'onsets', 'durations', 'pmod', 'numberOfIgnoredDummyScans');
+% Append to conditions .mat file
+[pcond fcond] = fileparts(fasf);
+fcond = fullfile(pcond, [fcond '_cond_asf.mat']);
+save(fcond, 'names', 'onsets', 'durations', 'pmod', ...
+            'numberOfIgnoredDummyScans');
 
 % Set outputs
-if nargout == 5
+if nargout == 6
     varargout{1} = names;
     varargout{2} = onsets;
     varargout{3} = durations;
     varargout{4} = pmod;
     varargout{5} = numberOfIgnoredDummyScans;
+    varargout{6} = expDurationInSecs;
 end
 

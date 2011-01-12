@@ -66,6 +66,11 @@ function [nx, ny, textbounds] = ASFX_DrawFormattedText(win, tstring, sx, sy, col
 % along with this program; if not, write to the Free Software
 % Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+%- Joffily
+%--------------------------------------------------------------------------
+ScreenVersion = Screen('Version');
+%--------------------------------------------------------------------------
+
 if nargin < 1 || isempty(win)
     error('DrawFormattedText: Windowhandle missing!');
 end
@@ -239,7 +244,14 @@ while ~isempty(tstring)
         % Need bounding box?
         if xcenter || flipHorizontal || flipVertical
             % Compute text bounding box for this substring:
-            bbox=Screen('TextBounds', win, curstring, [], [], [], righttoleft);
+            %- Joffily
+            %--------------------------------------------------------------
+            if ScreenVersion.build < 225943059
+                bbox=Screen('TextBounds', win, curstring, [], [], []);
+            else
+                bbox=Screen('TextBounds', win, curstring, [], [], [], righttoleft);
+            end
+            %--------------------------------------------------------------
         end
         
         % Horizontally centered output required?
@@ -274,10 +286,24 @@ while ~isempty(tstring)
 
             % We need to undo the translations...
             Screen('glTranslate', win, -xc, -yc, 0);
-            [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], [], righttoleft);
+             %- Joffily
+            %--------------------------------------------------------------
+            if ScreenVersion.build < 225943059
+                [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], []);
+            else
+                [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], [], righttoleft);
+            end
+            %--------------------------------------------------------------
             Screen('glPopMatrix', win);
         else
-            [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], [], righttoleft);
+            %- Joffily
+            %--------------------------------------------------------------
+            if ScreenVersion.build < 225943059
+                [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], []);
+            else
+                [nx ny] = Screen('DrawText', win, curstring, xp, yp, color, [], [], righttoleft);
+            end
+            %--------------------------------------------------------------
         end
     else
         % This is an empty substring (pure linefeed). Just update cursor

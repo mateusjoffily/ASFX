@@ -50,7 +50,7 @@ switch mode
     case 'mriSimulator'
         Cfg.responseDevice        = 'LUMINASERIAL';
         Cfg.synchToScannerPort    = 'SIMULATE';
-        %Cfg.scannerSynchTimeOutMs = '10';
+        Cfg.scannerSynchTimeOutMs = '10';
         Cfg.issueTriggers         = 1; % Send triggers to output device
         Cfg.digitalOutputDevice   = 'PARALLEL';
         
