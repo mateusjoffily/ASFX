@@ -59,8 +59,8 @@ pmod(10).param = {};
 pmod(10).poly = {1};
 
 % Set reference start time
-start_time = ExpInfo.TrialInfo(1).timing(1,3);  % after dummy scans (i.e. 1st page of 1st trial)
-% start_time = ExpInfo.Cfg.experimentStart;  % experiment start time
+% start_time = ExpInfo.TrialInfo(1).timing(1,3);  % after dummy scans (i.e. 1st page of 1st trial)
+start_time = ExpInfo.Cfg.experimentStart;  % experiment start time
 
 % Get onsets, durations and modulation parameters
 nT  = length(ExpInfo.TrialInfo);

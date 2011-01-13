@@ -370,16 +370,15 @@ Cfg.trialFileName = trialFileName;%'test.stm';
     hASFXFLIP = @ASF_xFlip; %#ok<NASGU>
     
     %SYNCHRONIZATION TO MR SCANNER
+    % - Joffily
+    %----------------------------------------------------------------------
     if Cfg.synchToScanner
-        ASF_waitForScannerSynch(windowPtr, Cfg);
-    end
-    Cfg.experimentStart = GetSecs; %store time when experiment was started
-    %WAIT FOR ADDITIONAL PULSES?
-    if Cfg.synchToScanner > 1
-        for iCount = 1:Cfg.synchToScanner-1
+        for iCount = 1:Cfg.synchToScanner
             ASF_waitForScannerSynch(windowPtr, Cfg);
         end
     end
+    Cfg.experimentStart = GetSecs; %store time when experiment was started
+    %----------------------------------------------------------------------
 
     %------------------------------------------------------------------
     % EYELINK
