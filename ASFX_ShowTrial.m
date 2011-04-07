@@ -358,7 +358,7 @@ movie.end.frame = movie.end(1).sec * movieFps;
 Screen('PlayMovie', moviePtr, 0);
 
 % Wait before continue...
-WaitSecs(1.5);
+% WaitSecs(1.5);
 
 end
 

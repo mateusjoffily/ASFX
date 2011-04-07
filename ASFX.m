@@ -919,7 +919,7 @@ for i = 1:nStimuli
         % MOVIE: Mateus Joffily (17/5/2010) - Add movie functionality
         %------------------------------------------------------------------
         [stimPath, stimName, stimExt] = fileparts(stimNames{i});
-        if strcmpi(stimExt, '.mov') || strcmpi(stimExt, '.m4v')  
+        if strcmpi(stimExt, '.mov') || strcmpi(stimExt, '.m4v')  || strcmpi(stimExt, '.avi')  
             Stimuli(1).type{i} = 'movie';
             
             % Increment counter
