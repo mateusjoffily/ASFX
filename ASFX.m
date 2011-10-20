@@ -395,13 +395,13 @@ Cfg.trialFileName = trialFileName;%'test.stm';
     %----------------------------------------------------------------------
     % Mateus Joffily - 26/11/2010
     %----------------------------------------------------------------------
-    TrialInfo = struct('trial',         cell(1,Cfg.nTrials), ...
-                       'datestr',       cell(1,Cfg.nTrials), ...
-                       'tStart',        cell(1,Cfg.nTrials), ...
-                       'timing',        cell(1,Cfg.nTrials), ...
-                       'pageFlipCount', cell(1,Cfg.nTrials), ...
-                       'Response',      cell(1,Cfg.nTrials), ...
-                       'movie',         cell(1,Cfg.nTrials));
+%     TrialInfo = struct('trial',         cell(1,Cfg.nTrials), ...
+%                        'datestr',       cell(1,Cfg.nTrials), ...
+%                        'tStart',        cell(1,Cfg.nTrials), ...
+%                        'timing',        cell(1,Cfg.nTrials), ...
+%                        'pageFlipCount', cell(1,Cfg.nTrials), ...
+%                        'Response',      cell(1,Cfg.nTrials), ...
+%                        'movie',         cell(1,Cfg.nTrials));
     %----------------------------------------------------------------------
     for i = 1:Cfg.nTrials
         fprintf(1, 'TRIAL %3d/%d: ', i, Cfg.nTrials) %feedback on operator screen
@@ -411,8 +411,18 @@ Cfg.trialFileName = trialFileName;%'test.stm';
         %------------------------------------------------------------------
         % Mateus Joffily - 26/11/2010
         %------------------------------------------------------------------
-        TrialInfo(i) = ASFSHOWTRIAL(trial(i), windowPtr, Stimuli, Cfg);
+%         TrialInfo(i) = ASFSHOWTRIAL(trial(i), windowPtr, Stimuli, Cfg);
         %------------------------------------------------------------------
+        this_TrialInfo = ASFSHOWTRIAL(trial(i), windowPtr, Stimuli, Cfg);
+        %PREALLOCATE MEMORY FOR TRIALS
+        if i == 1
+            TrialInfo = repmat(this_TrialInfo, [1, Cfg.nTrials]);
+        end
+        %CONSIDER ADDING A CHECK HERE WHETHER ALL FIELDS IN TRIALINFO EXIST
+        %ESPECIALLY PROGRAMMERS OF PLUGIN FNCTIONS MAY FORGET SOMETHING
+        %check_trialinfo(TrialInfo(i));
+        TrialInfo(i) = this_TrialInfo;
+
 
         %------------------------------------------------------------------
         % Mateus Joffily - 26/11/2010

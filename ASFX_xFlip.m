@@ -49,10 +49,12 @@ switch bPreserveBackBuffer
             %--------------------------------------------------------------
             % Draw many textures at once - Modified by Mateus Joffily
             %--------------------------------------------------------------
-            if numel(texture) == 1
-                Screen('DrawTexture', windowPtr, texture);
-            else
-                Screen('DrawTextures', windowPtr, texture);
+            if ~isempty(texture)
+                if numel(texture) == 1
+                    Screen('DrawTexture', windowPtr, texture);
+                else
+                    Screen('DrawTextures', windowPtr, texture);
+                end
             end
             %--------------------------------------------------------------
         end

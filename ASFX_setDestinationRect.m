@@ -18,14 +18,18 @@ function Cfg = ASFX_setDestinationRect(Cfg, ratio, loc)
 
 MatlabResolutionNow = get(0, 'ScreenSize');
 
-if isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'Resolution') && ...
+if isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'rect')
+    screenW = Cfg.Screen.rect(3);
+elseif isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'Resolution') && ...
    isfield(Cfg.Screen.Resolution, 'width')
     screenW = Cfg.Screen.Resolution.width;
 else
     screenW = MatlabResolutionNow(3);
 end
 
-if isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'Resolution') && ...
+if isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'rect')
+    screenH = Cfg.Screen.rect(4);
+elseif isfield(Cfg, 'Screen') && isfield(Cfg.Screen, 'Resolution') && ...
    isfield(Cfg.Screen.Resolution, 'height')
     screenH = Cfg.Screen.Resolution.height;
 else
@@ -42,24 +46,26 @@ else
     return
 end
 
-rectW = screenW * ratioW;
-rectH = screenH * ratioH;
+rectW = fix( screenW * ratioW );
+rectH = fix( screenH * ratioH );
 
 switch loc
     case 'center'
-        w1 = fix( (screenW - rectW) / 2 );
-        w2 = fix( w1 + rectW );
-        h1 = fix( (screenH - rectH) / 2 );
-        h2 = fix( h1 + rectH );
+        x1 = fix( (screenW - rectW) / 2 );
+        x2 = x1 + rectW ;
+        y1 = fix( (screenH - rectH) / 2 );
+        y2 = y1 + rectH ;
         
     case 'top'
-        w1 = fix( (screenW - rectW) / 2 );
-        w2 = fix( w1 + rectW );
-        h1 = 0;
-        h2 = fix( h1 + rectH );
+        x1 = fix( (screenW - rectW) / 2 );
+        x2 = x1 + rectW ;
+        y1 = 0;
+        y2 = y1 + rectH ;
 end
 
-% Set Destination Rectangle
-Cfg.Screen.destinationRect = [w1 h1 w2 h2];
+% Set Destination Rectangle:
+% Warning! the vector elements are the edges of the destination rectangle:
+% [x1 y1 x2 y2] is not [x1 y1 width height]
+Cfg.Screen.destinationRect = [x1 y1 x2 y2];
 
 end

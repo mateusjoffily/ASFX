@@ -110,7 +110,7 @@ for i = 1:nPages
                 show_text(atrial, windowPtr, Stimuli, Cfg, i, lastTexture);
             
         case 'sound'
-            timing(i,:) = show_sound(pahandle, atrial.pageDuration(i));
+            timing(i,:) = show_sound(pahandle, atrial.pageDuration(i), Cfg, atrial.pageNumber(i));
            
         case 'movie'
             [timing(i,:) flipCount(i) lastTexture movie(i)] = ...
@@ -250,9 +250,17 @@ ASFX_DrawFormattedText(windowPtr, textStr, 'center', 'center', ...
 
 end
 
-function timing = show_sound(pahandle, pageDuration)
+function timing = show_sound(pahandle, pageDuration, Cfg, pageNumber)
 
 StimulusOnsetTime = PsychPortAudio('Start', pahandle, 1, 1, 1);
+
+%SET TRIGGER
+ASF_setTrigger(Cfg, pageNumber);
+if Cfg.Eyetracking.useEyelink
+    % Check recording status, stop display if error
+    Cfg.Eyetracking.err = Eyelink('checkrecording');
+    Cfg.Eyetracking.status = Eyelink('message', sprintf('PAGE %04d', pageNumber));
+end
 
 %LOG WHEN THIS PAGE APPEARED
 timing   = zeros(1,6);

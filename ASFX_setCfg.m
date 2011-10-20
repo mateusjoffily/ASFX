@@ -26,6 +26,11 @@ Cfg.Screen.Resolution.height = 768;
 if exist('debugOK', 'var') && debugOK
     % Small window for debugging
     Cfg.Screen.rect = [1, 1, 800, 600];
+    
+% else
+%     Cfg.Screen.rect = [1, 1, ...
+%                        Cfg.Screen.Resolution.width, ...
+%                        Cfg.Screen.Resolution.height];
 end
 
 if exist('TR', 'var')
