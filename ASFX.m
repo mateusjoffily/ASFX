@@ -979,17 +979,24 @@ for i = 1:nStimuli
             Stimuli(1).type{i} = 'picture';
             %--------------------------------------------------------------
         
-            % Increment counter
+            % Increment countersc
             pictureCounter = pictureCounter + 1;
             Stimuli(1).index(i) = pictureCounter;
            
             %READ PICTURE INTO MATRIX
             [imdata, MAP, ALPHA]=imread(stimNames{i});
-            %convert 1 bit to 8 bit
-            if(size(MAP, 1) == 2)
-                imdata = 255 - 255*imdata;
-            end
             
+            % Convert indexed to RGB image
+            if size(imdata, 3) == 1 && size(MAP, 2) == 3
+                % Convert indexed to RGB image
+                imdata = 1 + double(imdata);
+                RGB = zeros([size(imdata) 3]);
+                for n = 1:3
+                    RGB(:,:,n) = reshape( MAP(imdata,n), size(imdata) );
+                end
+                MAP = [];
+            end
+
             %--------------------------------------------------------------
             % PNG: Mateus Joffily (29/10/2010) - Add transparency 
             %                                    functionality
@@ -998,13 +1005,13 @@ for i = 1:nStimuli
                 imdata(:,:,4) = ALPHA(:,:); 
             end
             %--------------------------------------------------------------
-            
+
             %oldclut = Screen('LoadCLUT', windowPtr, MAP);
 
             %PUT PICTURE ON A TEXTURE
             Stimuli(1).picture(pictureCounter).tex = Screen('MakeTexture', windowPtr, imdata);
-            s = size(imdata);
-            Stimuli(1).picture(pictureCounter).size = s([2 1]);  % Save picture size as [width height]
+            sS = size(imdata);
+            Stimuli(1).picture(pictureCounter).size = sS([2 1]);  % Save picture size as [width height]
         end
          
     elseif length(stimNames{i}) >= 2 && stimNames{i}(1) == '"' && ...

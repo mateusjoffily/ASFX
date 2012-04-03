@@ -61,6 +61,8 @@ switch mode
         
     case 'lab'
         Cfg.responseDevice        = 'MOUSE';
+        Cfg.issueTriggers         = 1; % Send triggers to output device
+        Cfg.digitalOutputDevice   = 'PARALLEL';
 
 end
 
