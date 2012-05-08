@@ -683,7 +683,9 @@ if(~isfield(Cfg.Screen, 'distanceCm')), Cfg.Screen.distanceCm = 45; end %DELL M7
 
 windowPtr = [];
 %CHECK WHETHER DATA FILE ALREADY EXISTS
-[Cfg.pathstr, Cfg.name, Cfg.ext, Cfg.version] = fileparts(expName);
+% [Cfg.pathstr, Cfg.name, Cfg.ext, Cfg.version] = fileparts(expName);
+[Cfg.pathstr, Cfg.name, Cfg.ext] = fileparts(expName);    % Joffily - avoid incompatibility with some Matlab versions
+Cfg.version = '';                                         % Joffily
 filename = fullfile(Cfg.pathstr, [Cfg.name, '.mat']);
 if exist(filename, 'file') == 2
     msg = sprintf('File %s already exists. Overwrite?', filename);
