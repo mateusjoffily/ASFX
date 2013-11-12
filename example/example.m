@@ -1,5 +1,6 @@
 
 Cfg = ASFX_setCfg([], 'lab', true);
+Cfg.issueTriggers = 0;
 
 Cfg.text.texture = {0 0 [0 0 -1] 0 0};
 
